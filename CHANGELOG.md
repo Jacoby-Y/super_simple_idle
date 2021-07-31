@@ -1,3 +1,8 @@
+## v0.2.3
+- Local Storage functionality! (press 's' to save, it will load automatically on page load)
+- Accurate statistics on main button
+- Added debounce time to some buttons, so autoclickers aren't OP
+
 ## v0.2.2
 - Removed ability to use my implemented debugging tools in published versions
 - Split code into multiple files 
