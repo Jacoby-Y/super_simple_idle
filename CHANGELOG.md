@@ -1,3 +1,8 @@
+## v0.2.2
+- Removed ability to use my implemented debugging tools in published versions
+- Split code into multiple files 
+- Added console log talking about my hamster (an other stuff)
+
 ## v0.2.1
 - Added quality of life callbacks/features to templater.js
 - Nerfed idle gains
