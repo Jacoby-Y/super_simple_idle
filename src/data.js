@@ -1,18 +1,29 @@
 const data = templater();
+
+if (data.local_can_load()) {
+    data.local_get();
+}
+else {
 data.new("money", 0);
     data.round("money", true);
+
 data.new("per_click_num", 2);
 data.new("per_click_cost", 10);
 data.new("per_click_lvl", 1);
 data.new("per_click", 1);
-data.new("tip", "Hey, my name is Tippy, and I'm your guide.\nYou can start out by clicking that blue button.");
-data.new("tip_index", 1, (ev, k, vari)=>{if (ev=="add") console.log(`tip_index: ${vari.value}`)}); //-! for debugging
-data.new("tip_out", true);
+data.new("per_click_display", 1);
+    data.round_dec("per_click_display", 2);
 
 data.new("per_sec_num", 1);
 data.new("per_sec_cost", 100);
 data.new("per_sec_lvl", 0);
 data.new("per_sec", 0);
+data.new("per_sec_display", 0);
+    data.round_dec("per_sec_display", 0);
+
+data.new("tip", "Hey, my name is Tippy, and I'm your guide.\nYou can start out by clicking that blue button.");
+data.new("tip_index", 1, (ev, k, vari)=>{if (ev=="add") console.log(`tip_index: ${vari.value}`)}); //-! for debugging
+data.new("tip_out", true);
 
 data.new("css_per_click_info", "none");
 data.new("css_per_sec_info", "none");
@@ -23,6 +34,7 @@ data.new("css_click_btn", "none");
 data.new("css_idle_btn", "none");
 
 data.new("click_mult_lvl", 0);
+    data.round_dec("click_mult_lvl", 1);
 data.new("idle_mult_lvl", 0);
     data.round_dec("idle_mult_lvl", 1);
 
@@ -38,7 +50,8 @@ data.new("css_unlock_idle_mult_btn", "none");
 data.new("css_prestige_btn", "none");
 data.new("prestige_cost", 10000);
 data.number_style("prestige_cost", "fmt");
-
+}
+const main_wrapper = $("#main-wrapper")[0];
 const main_btn = $("#main-btn")[0];
 const menu_btn = $("#menu-btn")[0];
 const money_txt = $("#money-txt")[0];

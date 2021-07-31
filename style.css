@@ -97,7 +97,7 @@ body {
 
 #tip {
     position: absolute;
-    top: 10px;
+    top: -78px;
     right: 10px;
     border: 2px solid #1ca5aa;
     transition: 1s;

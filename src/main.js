@@ -51,21 +51,55 @@ const disable_btns = (bool)=>{
 style_setters();
 
 let menu_out = false;
+let debounce = false;
 
 disable_btns(true); 
 setTimeout(() => { disable_btns(false); }, 1000);
 
+if (data.local_can_load()) {
+    toggle_tip(false);
+} else {
+    toggle_tip(true);
+}
+
 //? Debugging purposes!
 document.onkeydown = (e)=>{
+    if (e.key == "s") {
+        console.log("Saved data!"); 
+        data.local_store();
+    }
     if (window.location.hostname != "127.0.0.1") {return;}
-    if (e.key == " ") {
-        data.add("money", 100);
+
+    if (!isNaN(e.key))  data.add("money", parseInt(e.key) * 100);
+
+    switch (e.key) {
+        case "c":
+            console.clear();
+            break;
+        case "C":
+            localStorage.clear();
+            console.log(localStorage);
+            break;
+        case "r":
+            location.reload();
+            break;
+        case "l":
+            console.log("Loaded data!");
+            data.local_get();
+            break;
+        case "s":
+            console.log("Saved data!");
+            data.local_store();
+            break;
+        default:
+            break;
     }
 }
 
 tip_wrapper.onclick = ()=>toggle_tip(false);
 
 main_btn.onclick = ()=>{
+    if (debounce) return; debounce = true; setTimeout(() => {  debounce = false;  }, 100);
     money_txt.style.display = "inline-block"
     const bonus = (data.get("click_mult_lvl")/100) + 1;
     const money_add = data.get("per_click") * bonus;
@@ -256,8 +290,20 @@ unlock_idle_mult_btn.onclick = ()=>{
         style_setters();
     }
 }
-click_mult_btn.onclick = ()=>{ data.add("click_mult_lvl"); }
-idle_mult_btn.onclick = ()=>{ data.add("idle_mult_lvl", 0.2); }
+click_mult_btn.onclick = ()=>{ 
+    if (debounce) return; debounce = true; setTimeout(() => {  debounce = false;  }, 100);
+    data.add("click_mult_lvl"); 
+    const bonus = (data.get("click_mult_lvl") / 100) + 1;
+    const money_add = data.get("per_click") * bonus;
+    data.set("per_click_display", money_add);
+}
+idle_mult_btn.onclick = ()=>{ 
+    if (debounce) return; debounce = true; setTimeout(() => {  debounce = false;  }, 100);
+    data.add("idle_mult_lvl", 0.2); 
+    const bonus = (data.get("idle_mult_lvl") / 100) + 1;
+    const idle_add = (data.get("per_sec") / 4) * bonus;
+    data.set("per_sec_display", idle_add)
+}
 
 prestige_btn.onclick = ()=>{
     const money = data.get("money");
@@ -272,7 +318,7 @@ const idle_loop = setInterval(() => {
     if (data.get("per_sec") <= 0) {
         return;
     }
-    const bonus = (data.get("idle_mult_lvl")/100) + 1;
+    const bonus = (data.get("idle_mult_lvl") / 100) + 1;
     const idle_add = (data.get("per_sec") / 4) * bonus;
     data.add("money", idle_add);
 }, 250);
