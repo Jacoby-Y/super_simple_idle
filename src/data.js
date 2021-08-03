@@ -1,56 +1,79 @@
-const data = templater();
 
-if (data.local_can_load()) {
-    data.local_get();
+const tips = [
+    // 0
+    "None",
+    // 1
+    "Hello, and welcome to my game!\nYou can start out by clicking that blue button.",
+    // 2
+    "The more you progress the game, the more content shows itself",
+    // 3
+    "Looks like you unlocked the menu!\nOpen it by clicking the symbol under your money",
+    // 4
+    "Here you can upgrade your clicking or idling abilities!\nGo ahead, spend some money!",
+    // 5
+    "Now, you can see how much money you're getting per click\n(on the main button)",
+    // 6
+    "Now you can unlock multipliers.\nHow much more content is there!?",
+    // 7
+    "Now you can prestige.\nThis lets you restart with a bonus and unlock content!",
+
+];
+
+if (local.can_load()) {
+    data = local.load();
+    data.money.round(0);
+    data.per_click_display.round(2);
+    data.per_sec_display.round(3);
+    data.click_mult_lvl.round(1);
+    data.idle_mult_lvl.round(1);
+    data.prestige_cost.number_style("fmt");
 }
 else {
-data.new("money", 0);
-    data.round("money", true);
+    data.money = new Gui(0); data.money.round(0);
 
-data.new("per_click_num", 2);
-data.new("per_click_cost", 10);
-data.new("per_click_lvl", 1);
-data.new("per_click", 1);
-data.new("per_click_display", 1);
-    data.round_dec("per_click_display", 2);
+    data.per_click_num = new Gui(2);
+    data.per_click_cost = new Gui(10);
+    data.per_click_lvl = 1;
+    data.per_click = 1;
+    data.per_click_display = new Gui(1); data.per_click_display.round(2);
 
-data.new("per_sec_num", 1);
-data.new("per_sec_cost", 100);
-data.new("per_sec_lvl", 0);
-data.new("per_sec", 0);
-data.new("per_sec_display", 0);
-    data.round_dec("per_sec_display", 0);
+    data.per_sec_num = new Gui(1);
+    data.per_sec_cost = new Gui(100);
+    data.per_sec_lvl = 0;
+    data.per_sec = 0;
+    data.per_sec_display = new Gui(0); data.per_sec_display.round(3);
 
-data.new("tip", "Hey, my name is Tippy, and I'm your guide.\nYou can start out by clicking that blue button.");
-data.new("tip_index", 1, (ev, k, vari)=>{if (ev=="add") console.log(`tip_index: ${vari.value}`)}); //-! for debugging
-data.new("tip_out", true);
+    data.tip = tips[1];
+    data.tip_index = 1;
+    data.tip_out = true;
 
-data.new("css_per_click_info", "none");
-data.new("css_per_sec_info", "none");
-data.new("css_money", "none");
-data.new("css_menu_btn", "none");
-data.new("css_per_sec_upg", "none");
-data.new("css_click_btn", "none");
-data.new("css_idle_btn", "none");
+    data.css = {
+        per_click_info: "none",
+        per_sec_info: "none",
+        money: "none",
+        menu_btn: "none",
+        per_sec_upg_btn: "none",
+        click_mult_btn: "none",
+        idle_mult_btn: "none",
+        unlock_click_mult_btn: "none",
+        unlock_idle_mult_btn: "none",
+        prestige_btn: "none"
+    }
 
-data.new("click_mult_lvl", 0);
-    data.round_dec("click_mult_lvl", 1);
-data.new("idle_mult_lvl", 0);
-    data.round_dec("idle_mult_lvl", 1);
+    data.click_mult_lvl = new Gui(0);
+        data.click_mult_lvl.round(1);
+    data.idle_mult_lvl = new Gui(0);
+        data.idle_mult_lvl.round(1);
 
-data.new("css_click_mult", "none");
-data.new("css_idle_mult", "none"); 
+    data.unlocked_click_mult = false;
+    data.unlocked_idle_mult = false;
 
-data.new("unlocked_click_mult", false);
-data.new("unlocked_idle_mult", false);
-
-data.new("css_unlock_click_mult_btn", "none");
-data.new("css_unlock_idle_mult_btn", "none");
-
-data.new("css_prestige_btn", "none");
-data.new("prestige_cost", 10000);
-data.number_style("prestige_cost", "fmt");
+    data.prestige_cost = new Gui(10000);
+        data.prestige_cost.number_style("fmt");
+    data.prestige_lvl = 0;
 }
+
+//#region DOM Objects
 const main_wrapper = $("#main-wrapper")[0];
 const main_btn = $("#main-btn")[0];
 const menu_btn = $("#menu-btn")[0];
@@ -67,7 +90,7 @@ const unlock_idle_mult_btn = $("#unlock_idle_mult")[0];
 const click_mult_btn = $("#click-mult-btn")[0];
 const idle_mult_btn = $("#idle-mult-btn")[0];
 const prestige_btn = $("#prestige_btn")[0];
-
+//#endregion
 
 console.log(
 `I have a hamster named Týr, and he's sooooo cute. He's sleeping right now, as of writing this.

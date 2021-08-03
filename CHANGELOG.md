@@ -1,3 +1,7 @@
+## v0.2.4
+- Complete overhaul of Template.js and localStorage
+- No prestige yet
+
 ## v0.2.3
 - Local Storage functionality! (press 's' to save, it will load automatically on page load)
 - Accurate statistics on main button
