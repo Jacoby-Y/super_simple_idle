@@ -4,4 +4,4 @@
 - Vanilla HTML (not sure what else you'd use)
 - Vanilla JS for most logic
 - Cash for dealing with the DOM
-- Templater.js (my own lib) to store data and dynamically update ui and text
+- watcher.js (my own lib) to store data and dynamically update ui and text
