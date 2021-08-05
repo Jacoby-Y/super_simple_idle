@@ -114,12 +114,12 @@ data.settings = {
     per_click: {display(val) {
         const bonus = (data.click_mult_lvl/100) + 1;
         const money_add = (val * bonus) * (data.prestige_lvl * 0.5 + 1);
-        return Math.round(money_add/10)*10;
+        return Math.round(money_add*10)/10;
     }},
     per_sec: {display(val) {
         const bonus = data.idle_mult_lvl + 1;
         const idle_add = ((val * (data.prestige_lvl * 0.5 + 1)) * bonus);
-        return Math.round(idle_add/10)*10;
+        return Math.round(idle_add*10)/10;
     }},
     ...data.settings
 }
