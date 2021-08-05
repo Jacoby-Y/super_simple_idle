@@ -1,4 +1,4 @@
-const latest = "v0.2.5";
+const latest = "v0.2.5.1";
 const version = localStorage.getItem("version");
 if (version == null || version != latest) {
     localStorage.removeItem("data");

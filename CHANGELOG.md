@@ -1,3 +1,6 @@
+## v0.2.6
+- Bug fixes... What, you expected more?
+
 ## v0.2.5
 - Replaced templater.js with watcher.js (both libraries from me)
 - Prestige implemented, sort of.

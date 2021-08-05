@@ -58,9 +58,6 @@ if (local.can_load()) {
 
     const ellapsed = Math.round(Date.now()/1000) - data.offline_date;
     if (ellapsed > 5 && data.per_sec > 0) {
-        // const bonus = data.idle_mult_lvl + 1;
-        // const idle_add = (data.per_sec * bonus);
-        // const total = ellapsed * idle_add;
         const total = data.settings.per_sec.display(data.per_sec);
         data.offline = total * ellapsed;
         data.money += data.offline;
@@ -117,13 +114,12 @@ data.settings = {
     per_click: {display(val) {
         const bonus = (data.click_mult_lvl/100) + 1;
         const money_add = (val * bonus) * (data.prestige_lvl * 0.5 + 1);
-        console.log(`(display) money_add: ${money_add}`);
-        return money_add;
+        return Math.round(money_add/10)*10;
     }},
     per_sec: {display(val) {
         const bonus = data.idle_mult_lvl + 1;
         const idle_add = ((val * (data.prestige_lvl * 0.5 + 1)) * bonus);
-        return idle_add;
+        return Math.round(idle_add/10)*10;
     }},
     ...data.settings
 }
