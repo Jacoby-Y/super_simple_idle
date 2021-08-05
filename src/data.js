@@ -55,6 +55,21 @@ data.settings = {
 }
 if (local.can_load()) {
     local.load(data);
+    
+    data.settings = {
+        per_click: {display(val) {
+            const bonus = (data.click_mult_lvl/100) + 1;
+            const money_add = (val * bonus) * (data.prestige_lvl * 0.5 + 1);
+            return Math.round(money_add*10)/10;
+        }},
+        per_sec: {display(val) {
+            const bonus = data.idle_mult_lvl/100 + 1;
+            const idle_add = ((val * (data.prestige_lvl * 0.5 + 1)) * bonus);
+            return Math.round(idle_add*100)/100;
+        }},
+        ...data.settings
+    }
+    local.update_gui(data, data);
 
     const ellapsed = Math.round(Date.now()/1000) - data.offline_date;
     if (ellapsed > 5 && data.per_sec > 0) {
@@ -108,22 +123,23 @@ else {
 
     data.offline = 0;
     data.offline_date = Math.round(Date.now()/1000);
+
+    data.settings = {
+        per_click: {display(val) {
+            const bonus = (data.click_mult_lvl/100) + 1;
+            const money_add = (val * bonus) * (data.prestige_lvl * 0.5 + 1);
+            return Math.round(money_add*10)/10;
+        }},
+        per_sec: {display(val) {
+            const bonus = data.idle_mult_lvl/100 + 1;
+            const idle_add = ((val * (data.prestige_lvl * 0.5 + 1)) * bonus);
+            return Math.round(idle_add*100)/100;
+        }},
+        ...data.settings
+    }
+    local.update_gui(data, data);
 }
 
-data.settings = {
-    per_click: {display(val) {
-        const bonus = (data.click_mult_lvl/100) + 1;
-        const money_add = (val * bonus) * (data.prestige_lvl * 0.5 + 1);
-        return Math.round(money_add*10)/10;
-    }},
-    per_sec: {display(val) {
-        const bonus = data.idle_mult_lvl/100 + 1;
-        const idle_add = ((val * (data.prestige_lvl * 0.5 + 1)) * bonus);
-        return Math.round(idle_add*10)/10;
-    }},
-    ...data.settings
-}
-local.update_gui(data, data);
 
 console.log(
 `I have a hamster named Týr, and he's sooooo cute. He's sleeping right now, as of writing this.
