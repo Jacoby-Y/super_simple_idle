@@ -117,7 +117,7 @@ data.settings = {
         return Math.round(money_add*10)/10;
     }},
     per_sec: {display(val) {
-        const bonus = data.idle_mult_lvl + 1;
+        const bonus = data.idle_mult_lvl/100 + 1;
         const idle_add = ((val * (data.prestige_lvl * 0.5 + 1)) * bonus);
         return Math.round(idle_add*10)/10;
     }},
