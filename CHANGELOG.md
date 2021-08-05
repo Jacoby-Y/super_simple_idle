@@ -1,3 +1,9 @@
+## v0.2.5
+- Replaced templater.js with watcher.js (both libraries from me)
+- Prestige implemented, sort of.
+- Prestige bonus and general info is more verbose.
+- Added check_version.js (so if you load a newer version, you restart instead of blowing up your pc)
+
 ## v0.2.4
 - Complete overhaul of Template.js and localStorage
 - No prestige yet

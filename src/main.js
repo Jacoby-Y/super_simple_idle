@@ -45,8 +45,8 @@ const disable_btns = (bool)=>{
     if (bool)  $("#main-wrapper")[0].style.pointerEvents = "none";
     else  $("#main-wrapper")[0].style.pointerEvents = "auto";
 }
-const do_prestige = ()=>{
-    
+const close_poppup = ()=>{
+    poppups.css("display", "none");
 }
 
 style_setters();
@@ -71,15 +71,15 @@ document.onkeydown = (e)=>{
     }
     if (window.location.hostname != "127.0.0.1") {return;}
 
-    if (!isNaN(e.key))  data.money += parseInt(e.key) * 100;
+    if (!isNaN(e.key) && e.key != ' ')  data.money += parseInt(e.key) * 100
 
     switch (e.key) {
         case "c":
             console.clear();
             break;
         case "C":
-            localStorage.clear();
-            console.log(localStorage);
+            localStorage.removeItem("data");
+            location.reload();
             break;
         case "r":
             location.reload();
@@ -88,11 +88,8 @@ document.onkeydown = (e)=>{
             console.log("Loaded data!");
             local.get();
             break;
-        case "s":
-            console.log("Saved data!");
-            local.store();
-            break;
-        default:
+        case "a":
+            main_btn.onclick();
             break;
     }
 }
@@ -102,9 +99,10 @@ tip_wrapper.onclick = ()=>toggle_tip(false);
 main_btn.onclick = ()=>{
     if (debounce) return; debounce = true; setTimeout(() => {  debounce = false;  }, 100);
     data.css.money = "inline-block"
+    // const bonus = (data.click_mult_lvl/100) + 1;
+    // const money_add = (data.per_click * bonus) * (data.prestige_lvl * 0.5 + 1);
     const bonus = (data.click_mult_lvl/100) + 1;
-    const money_add = data.per_click * bonus;
-    // console.log(`bonus: ${bonus}, total add: ${money_add}`);
+    const money_add = (data.per_click * bonus) * (data.prestige_lvl * 0.5 + 1);
     data.money += money_add;
     const money = data.money;
 
@@ -182,17 +180,17 @@ menu_btn.onclick = ()=>{
     }
 }
 per_click_upg.onclick = ()=>{
+    if (data.money < data.per_click_cost) return;
     data.css.per_click_info = "block";
     data.css.per_sec_upg_btn = "block";
-    if (data.money >= data.per_click_cost) {
-        data.money -= data.per_click_cost;
-        data.per_click = data.per_click_num.value;
-        const new_cost = data.per_click_cost.value + (10*data.per_click_lvl);
-        data.per_click_cost = new_cost;
-        data.per_click_num++;
-        data.per_click_lvl++;
-        data.per_click_display++;
-    }
+
+    data.money -= data.per_click_cost;
+    data.per_click = data.per_click_num;
+    const new_cost = data.per_click_cost + (10*data.per_click_lvl);
+    data.per_click_cost = new_cost;
+    data.per_click_num++;
+    data.per_click_lvl++;
+    
     style_setters();
 
     switch (data.tip_index) {
@@ -215,14 +213,13 @@ per_click_upg.onclick = ()=>{
 per_sec_upg.onclick = ()=>{
     if (data.money >= data.per_sec_cost) {
         data.money -= data.per_sec_cost;
-        data.per_sec = data.per_sec_num.value;
-        let new_cost = data.per_sec_cost.value + (15*data.per_sec_lvl);
+        data.per_sec = data.per_sec_num;
+        let new_cost = data.per_sec_cost + (15*data.per_sec_lvl);
         data.per_sec_cost = new_cost;
         data.per_sec_num++;
         data.per_sec_lvl++;
-        data.per_sec_display++;
     }
-    if (data.per_sec_lvl.value === 1) {}
+    if (data.per_sec_lvl === 1) {}
         data.css.per_sec_info = "block";
         data.css.unlock_click_mult_btn = "block";
         data.css.unlock_idle_mult_btn = "block";
@@ -251,8 +248,8 @@ unlock_click_mult_btn.onclick = ()=>{
         unlock_click_mult_btn.style = "none";
         data.unlocked_click_mult = true;
         data.css.click_mult_btn = "block";
-        data.css.prestige_btn = "block";
-        if (data.tip_index==7) {
+        if (data.tip_index==7 && data.unlocked_idle_mult) {
+            data.css.prestige_btn = "block";
             disable_btns(true); 
             data.tip = tips[7];
             data.tip_index++;
@@ -273,8 +270,8 @@ unlock_idle_mult_btn.onclick = ()=>{
         unlock_idle_mult_btn.style = "none";
         data.unlocked_idle_mult = true;
         data.css.idle_mult_btn = "block";
-        data.css.prestige_btn = "block";
-        if (data.tip_index==7) {
+        if (data.tip_index==7 && data.unlocked_click_mult) {
+            data.css.prestige_btn = "block";
             disable_btns(true); 
             data.tip = tips[7];
             data.tip_index++;
@@ -288,31 +285,74 @@ unlock_idle_mult_btn.onclick = ()=>{
 click_mult_btn.onclick = ()=>{ 
     if (debounce) return; debounce = true; setTimeout(() => {  debounce = false;  }, 100);
     data.click_mult_lvl = data.click_mult_lvl + 1; 
-    const bonus = (data.click_mult_lvl.value / 100) + 1;
+    const bonus = (data.click_mult_lvl / 100) + 1;
     const money_add = data.per_click * bonus;
-    data.per_click_display = money_add;
 }
 idle_mult_btn.onclick = ()=>{ 
     if (debounce) return; debounce = true; setTimeout(() => {  debounce = false;  }, 100);
     data.idle_mult_lvl += 0.2; 
     const bonus = (data.idle_mult_lvl / 100) + 1;
     const idle_add = data.per_sec * bonus; //-! remember: only +(per_sec*0.002) per
-    // console.log(`idle_add: ${idle_add}`);
-    data.per_sec_display = idle_add;
 }
 
 prestige_btn.onclick = ()=>{
-    if (data.money.value >= data.prestige_cost.value) {
-        data.money -= data.prestige_cost.value;
-        window.alert("You win!... Well, kind of.\nThe prestige system hasn't been implemented yet!\nSo, for now, you win!");
+    if (data.money < data.prestige_cost) return;
+    prestige_poppup.css("display", "block");
+}
+const do_prestige = ()=>{
+    data.prestige_lvl++;
+    data.money = 0;
+
+    data.per_click_num = 2;
+    data.per_click_cost = 10;
+    data.per_click_lvl = 1;
+    data.per_click = 1;
+
+    data.per_sec_num = 1;
+    data.per_sec_cost = 100;
+    data.per_sec_lvl = 0;
+    data.per_sec = 0;
+
+    data.css = {
+        per_click_info: "block",
+        per_sec_info: "block",
+        money: "block",
+        menu_btn: "block",
+        per_sec_upg_btn: "block",
+        click_mult_btn: "none",
+        idle_mult_btn: "none",
+        unlock_click_mult_btn: "none",
+        unlock_idle_mult_btn: "none",
+        prestige_btn: "none"
     }
+
+    data.click_mult_lvl = 0;
+    data.idle_mult_lvl = 0;
+
+    data.prestige_cost = data.prestige_cost*1.5;
+
+    data.offline = 0;
+
+    data.unlocked_click_mult = false;
+    data.unlocked_idle_mult = false;
+
+    local.store();
+
+    location.reload();
 }
 
+let idle_index = 0;
 const idle_loop = setInterval(() => {
+    if (idle_index == 20) {
+        data.offline_date = Math.round(Date.now()/1000);
+        local.store();
+        idle_index=0;
+    }
+    idle_index++;
     if (data.per_sec <= 0) {
         return;
     }
-    const bonus = data.idle_mult_lvl.value + 1;
-    const idle_add = (data.per_sec * bonus) / 4;
-    data.money = data.money.value + idle_add;
+    const bonus = data.idle_mult_lvl + 1;
+    const idle_add = ((data.per_sec * (data.prestige_lvl * 0.5 + 1)) * bonus) / 4 ;
+    data.money = data.money + idle_add;
 }, 250);

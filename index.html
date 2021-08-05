@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <script src="./lib/cash.js"></script>
-    <script defer src="./lib/templater.js"></script>
+    <!-- <script defer src="./lib/templater.js"></script> -->
+    <script defer src="./lib/watcher.js"></script>
+    <script defer src="./src/check_version.js"></script>
     <script defer src="./src/data.js"></script>
     <script defer src="./src/main.js"></script>
     <link rel="stylesheet" href="./style.css">
@@ -11,27 +13,41 @@
 </head>
 <body>
     <div id="main-wrapper">
-        <h3 templ id="money-txt">${{money}}</h3>
+        <h3 watch id="money-txt">${money}</h3>
+        <h3 id="prestige-info" style="color: white;" watch>{prestige_lvl}</h3>
         <a title="Project repository" target="_blank" href="https://github.com/Jacoby-Y/super_simple_idle" id="github-link"><img src="./assets/GitHub-Mark.png"></a>
         <div id="menu-wrapper">
             <div id="money-border"></div>
             <div id="menu-content">
                 <h3 id="menu-title">Upgrades!</h3>
-                <div class="upgrade-btn" id="per_click"><h3><span templ>{{per_click_num}}</span> per click ($<span templ>{{per_click_cost}}</span>)</h3></div>
-                <div class="upgrade-btn" id="per_sec"><h3><span templ>{{per_sec_num}}</span> per second ($<span templ>{{per_sec_cost}}</span>)</h3></div>
+                <div class="upgrade-btn" id="per_click"><h3>+1 per click ($<span watch>{per_click_cost}</span>)</h3></div>
+                <div class="upgrade-btn" id="per_sec"><h3>+1 per second ($<span watch>{per_sec_cost}</span>)</h3></div>
                 <div class="upgrade-btn" id="unlock_click_mult"><h3>Click multiplier ($2500)</h3></div>
                 <div class="upgrade-btn" id="unlock_idle_mult"><h3>Idle multiplier ($2500)</h3></div>
-                <div class="upgrade-btn" id="prestige_btn"><h3 templ>Prestige (${{prestige_cost}})</h3></div>
+                <div class="upgrade-btn" id="prestige_btn"><h3 watch>Prestige (${prestige_cost})</h3></div>
             </div>
         </div>
         <img id="menu-btn" style="width: 32px;" src="./assets/menu.svg">
         <div id="main-btn">
-            <h3 id="per-click-info" templ>+{{per_click_display}}</h3>
-            <h3 id="per-sec-info" templ>+{{per_sec_display}}/sec</h3>
+            <h3 id="per-click-info" watch>+{per_click}</h3>
+            <h3 id="per-sec-info" watch>+{per_sec}/sec</h3>
         </div>
-        <div class="multiplier" id="click-mult-btn"><h3 templ>+1% per click<br>current: {{click_mult_lvl}}%</h3></div>
-        <div class="multiplier" id="idle-mult-btn"><h3 templ>+0.2% per sec<br>current: {{idle_mult_lvl}}%</h3></div>
+        <div class="multiplier" id="click-mult-btn"><h3 watch>+1% per click<br>current: {click_mult_lvl}%</h3></div>
+        <div class="multiplier" id="idle-mult-btn"><h3 watch>+0.2% per sec<br>current: {idle_mult_lvl}%</h3></div>
         <div id="tip"><h3 id="tip-txt"></h3></div>
+    </div>
+    <div class="poppup">
+        <h3 class="poppup-title">Prestige?</h3>
+        <p class="poppup-info">
+            Prestiging lets you start over, but with extra income and new content to explore!<br>
+            Each prestige gives you a 50% bonus to all income!
+        </p>
+        <div class="poppup-btn" onclick="do_prestige()">Ok!</div>
+    </div>
+    <div class="poppup">
+        <h3 class="poppup-title">Welcome back!</h3>
+        <p class="poppup-info" watch>You gained ${offline} while you were gone!</p>
+        <div class="poppup-btn" onclick="close_poppup()">Ok!</div>
     </div>
 </body>
 </html>

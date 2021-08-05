@@ -11,9 +11,17 @@ body {
     user-select: none;
 }
 
-/* #region */
+/* #region Main Stuff */
 #main-wrapper {
     display: grid;
+}
+#prestige-info {
+    position: absolute;
+    width: max-content;
+    margin: 0;
+    bottom: 23px;
+    left: 29px;
+    pointer-events: none;
 }
 #money-txt {
     margin: 0; padding: 20px;
@@ -60,6 +68,7 @@ body {
 }
 /* #endregion */
 
+/* #region Menu Wrapper */
 #menu-wrapper {
     position: absolute;
     width: 15rem;
@@ -76,7 +85,7 @@ body {
 #menu-content {
     width: 100%; height: calc(100% - 78px);
     border: 2px solid #1ca5aa;
-    background-color: #212121;
+    background-color: rgba(33, 33, 33, 0);
 }
 #menu-title {
     color: white;
@@ -94,6 +103,8 @@ body {
 .upgrade-btn:hover {
     cursor: pointer;
 }
+/* #endregion */
+
 
 #tip {
     position: absolute;
@@ -107,6 +118,7 @@ body {
     padding: 1rem;
 }
 
+/* #region Multipliers */
 .multiplier {
     background-color: rgb(240, 87, 87);
     width: 15rem; height: 7rem;
@@ -155,7 +167,7 @@ body {
     transform: translate(-50%, -50%);
     width: max-content;
 }
-
+/* #endregion */
 
 #github-link {
     position: absolute;
@@ -166,3 +178,38 @@ body {
     width: 32px;
     height: 32px;
 }
+
+/* #region Poppup */
+.poppup {
+    position: absolute;
+    width: 50%; height: fit-content;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    border: 3px solid #3b3b3b;
+    border-radius: 10px;
+    background-color: #1ca5aa;
+    color: black;
+    padding: 1rem;
+    display: none;
+}
+.poppup-title {
+    text-align: center;
+    font-size: 2rem;
+    margin: 7px 0 1rem 0;
+}
+.poppup-info {
+    text-align: center;
+    font-size: 1.1rem;
+}
+.poppup-btn {
+    background-color: #15898d;
+    border-radius: 10px;
+    border: 2px solid #145457;
+    width: min-content;
+    padding: 10px 20px;
+    margin: 0 auto;
+}
+.poppup-btn:hover {
+    background-color: #127275;
+}
+/* #endregion */
