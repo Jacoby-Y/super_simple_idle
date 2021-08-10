@@ -7,7 +7,7 @@ body {
     padding: 0; margin: 0;
     width: 100vw;
     height: 100vh;
-    overflow-y: hidden;
+    overflow: hidden;
     user-select: none;
 }
 
@@ -32,8 +32,6 @@ body {
     margin: 1rem; padding: 0;
     z-index: 10;
     width: min-content;
-}
-#menu-btn:hover {
     cursor: pointer;
 }
 #main-btn {
@@ -77,27 +75,29 @@ body {
     transition: 1s;
 }
 #money-border {
-    border: 2px solid #1ca5aa;
+    border: 2px solid #1fc5ca;
     height: 4.5rem;
     width: 100%;
     border-bottom: none;
 }
 #menu-content {
     width: 100%; height: calc(100% - 78px);
-    border: 2px solid #1ca5aa;
+    border: 2px solid #1fc5ca;
     background-color: rgba(33, 33, 33, 0);
 }
 #menu-title {
     color: white;
     margin: 0;
     padding: 1.3rem 0;
-    background-color: #1ca5aa;
+    background-color: #1fc5ca;
     padding-right: 23%;
     text-align: right;
+    color: black;
 }
 .upgrade-btn {
     padding: 0.5rem; margin: 5px 5px 0 5px;
-    background-color: #1c720b;
+    background-color: rgb(42, 185, 17);
+    color: black;
     text-align: center;
 }
 .upgrade-btn:hover {
@@ -173,6 +173,7 @@ body {
     position: absolute;
     right: 10px;
     bottom: 5px;
+    transition-duration: 1s;
 }
 #github-link img {
     width: 32px;
@@ -212,4 +213,53 @@ body {
 .poppup-btn:hover {
     background-color: #127275;
 }
+.poppup-option-wrapper {
+    padding: 10px 20px;
+    margin: 0 auto;
+    width: max-content;
+}
+.poppup-option {
+    background-color: #15898d;
+    border-radius: 10px;
+    border: 2px solid #145457;
+    margin: 3px;
+    padding: 10px 15px;
+    width: min-content;
+    float: left;
+}
+.poppup-option:hover {
+    background-color: #127275;
+}
 /* #endregion */
+
+#pres-menu-btn {
+    position: absolute;
+    right: 15px;
+    top: 7.2rem;
+    cursor: pointer;
+    z-index: 10;
+}
+#pres-menu-wrapper {
+    width: 15rem;
+    position: absolute;
+    right: -246px;
+    bottom: 0;
+    height: calc(100% - 6.6rem);
+    border: 3px solid rgb(251, 175, 32);
+    transition: 1s;
+}
+#pres-menu-wrapper .upgrade-btn {
+    background-color: rgb(77, 209, 0);
+    color: black;
+}
+#pres-menu-title {
+    background-color: rgb(251, 175, 32);
+    color: black;
+    padding: 1rem;
+    margin: 0;
+}
+
+.tippy-box {
+    border: 1px solid white;
+}
+/* .tippy-content {} */

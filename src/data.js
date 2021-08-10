@@ -38,13 +38,17 @@ const prestige_btn = $("#prestige_btn")[0];
 const poppups = $(".poppup");
 const prestige_poppup = $(".poppup").eq(0);
 const offline_poppup = $(".poppup").eq(1);
+const pres_menu_btn = $("#pres-menu-btn")[0];
+const pres_menu = $("#pres-menu-wrapper");
+const github_link = $("#github-link");
+const prest_upgrades = [].slice.call($("#pres-menu-wrapper")[0].getElementsByClassName("upgrade-btn"));
 //#endregion
 
 data.settings = {
-    money: {round: 0},
+    money: {display: val => Math.floor(val)},
     prestige_lvl: {display(val){
         if (val > 0) {
-            return `Prestige bonus: +${val * 50}%`
+            return `Prestige bonus: +${Math.round((prest_bonus()-1)*100)}%`
         }
         return '';
     }},
@@ -52,21 +56,45 @@ data.settings = {
     idle_mult_lvl: {round: 1},
     prestige_cost: {display(val){return Number(val).toLocaleString("en-US")}},
     css: {skip: true},
+    calc_points: {display(val){return `${val} points`}},
+    per_click_cost: {display(val){return Math.floor(val - (val*(data.prest3_total/100)))}},
+    per_sec_cost: {display(val){return Math.floor(val - (val*(data.prest4_total/100)))}},
+    prest1_total: {display(val){return `+${val}% * ${data.prestige_lvl}`}},
+    prest2_total: {display(val){return `$${val}`}},
+    prest3_total: {display(val){return `-${val}%`}},
+    prest4_total: {display(val){return `-${val}%`}},
+    prest3_cost: {display(val){return (data.prest3_total<=50) ? val : "MAX"}},
+    prest4_cost: {display(val){return (data.prest4_total<=50) ? val : "MAX"}},
 }
+post_load_set = {
+    per_click: {display(val) {
+        const bonus = (data.click_mult_lvl/100) + 1;
+        const money_add = (val * bonus) * prest_bonus();
+        return Math.round(money_add*10)/10;
+    }},
+    per_sec: {display(val) {
+        const bonus = data.idle_mult_lvl/100 + 1;
+        const idle_add = (val * bonus) * prest_bonus();
+        return Math.round(idle_add*100)/100;
+    }},
+}
+
+const prest_bonus = ()=>( (data.prestige_lvl * 0.5)+((data.prest1_total/100)*data.prestige_lvl) + 1 );
+const calc_points = ()=> {
+    try {
+        const res = Math.round(((data.settings.per_sec.display(data.per_sec) + data.settings.per_click.display(data.per_click)) / 2) / 10);
+        return res;
+    } catch (err) {
+        console.warn(`(calc_points) data.settings.per_sec: ${data.settings.per_sec}`);
+        return 0;
+    }
+}
+
 if (local.can_load()) {
     local.load(data);
     
     data.settings = {
-        per_click: {display(val) {
-            const bonus = (data.click_mult_lvl/100) + 1;
-            const money_add = (val * bonus) * (data.prestige_lvl * 0.5 + 1);
-            return Math.round(money_add*10)/10;
-        }},
-        per_sec: {display(val) {
-            const bonus = data.idle_mult_lvl/100 + 1;
-            const idle_add = ((val * (data.prestige_lvl * 0.5 + 1)) * bonus);
-            return Math.round(idle_add*100)/100;
-        }},
+        ...post_load_set,
         ...data.settings
     }
     local.update_gui(data, data);
@@ -109,7 +137,8 @@ else {
         idle_mult_btn: "none",
         unlock_click_mult_btn: "none",
         unlock_idle_mult_btn: "none",
-        prestige_btn: "none"
+        prestige_btn: "none",
+        prestige_menu_btn: "none",
     }
 
     data.click_mult_lvl = 0;
@@ -120,29 +149,78 @@ else {
 
     data.prestige_cost = 10000;
     data.prestige_lvl = 0;
+    data.prestige_points = 0;
+
+    data.prest1_cost = 5
+    data.prest1_total = 0
+    data.prest2_cost = 5
+    data.prest2_total = 0
+    data.prest3_cost = 5
+    data.prest3_total = 0
+    data.prest4_cost = 5
+    data.prest4_total = 0
+    
 
     data.offline = 0;
     data.offline_date = Math.round(Date.now()/1000);
 
     data.settings = {
-        per_click: {display(val) {
-            const bonus = (data.click_mult_lvl/100) + 1;
-            const money_add = (val * bonus) * (data.prestige_lvl * 0.5 + 1);
-            return Math.round(money_add*10)/10;
-        }},
-        per_sec: {display(val) {
-            const bonus = data.idle_mult_lvl/100 + 1;
-            const idle_add = ((val * (data.prestige_lvl * 0.5 + 1)) * bonus);
-            return Math.round(idle_add*100)/100;
-        }},
+        ...post_load_set,
         ...data.settings
     }
+
+    data.calc_points = calc_points();
+
     local.update_gui(data, data);
 }
 
+tippy("#prest-btn-1", {
+    content: "<b>Increase your prestige bonus by 1% per prestige level<br>Cost: <span watch>{prest1_cost}</span><br>Total: <span watch>{prest1_total}</span></b>",
+    allowHTML: true,
+    placement: "right",
+    interactive: true,
+    onMount(instance) {
+        data.prest1_cost = data.prest1_cost;
+        data.prest1_total = data.prest1_total;
+    },
+    hideOnClick: false,
+});
+tippy("#prest-btn-2", {
+    content: "<b>Start with bonus money<br>Cost: <span watch>{prest2_cost}</span><br>Total: <span watch>{prest2_total}</span></b>",
+    allowHTML: true,
+    placement: "right",
+    interactive: true,
+    onMount(instance) {
+        data.prest2_cost = data.prest2_cost;
+        data.prest2_total = data.prest2_total;
+    },
+    hideOnClick: false,
+});
+tippy("#prest-btn-3", {
+    content: "<b>Decrease the cost of upgrading your money per click<br>Cost: <span watch>{prest3_cost}</span><br>Total: <span watch>{prest3_total}</span></b>",
+    allowHTML: true,
+    placement: "right",
+    interactive: true,
+    onMount(instance) {
+        data.prest3_cost = data.prest3_cost;
+        data.prest3_total = data.prest3_total;
+    },
+    hideOnClick: false,
+});
+tippy("#prest-btn-4", {
+    content: "<b>Decrease the cost of upgrading your money per second<br>Cost: <span watch>{prest4_cost}</span><br>Total: <span watch>{prest4_total}</span></b>",
+    allowHTML: true,
+    placement: "right",
+    interactive: true,
+    onMount(instance) {
+        data.prest4_cost = data.prest4_cost;
+        data.prest4_total = data.prest4_total;
+    },
+    hideOnClick: false,
+});
 
-console.log(
-`I have a hamster named Týr, and he's sooooo cute. He's sleeping right now, as of writing this.
-I'm gonna add a tip that talks about my hamster. 
-Oh, by the way, you can just click on the tip box to make it go away! I'll have to add a tip for that too`
-);
+// console.log(
+// `I have a hamster named Týr, and he's sooooo cute. He's sleeping right now, as of writing this.
+// I'm gonna add a tip that talks about my hamster. 
+// Oh, by the way, you can just click on the tip box to make it go away! I'll have to add a tip for that too`
+// );

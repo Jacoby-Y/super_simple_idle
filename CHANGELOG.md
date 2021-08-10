@@ -1,10 +1,23 @@
-## v0.2.6
+## v0.3
+- Added the prestige menu and a prestige point system
+- Added 4 prestige upgrade options
+- More code destructuring
+- Started using Tippy.js
+- Fixed "per second" cost not going up right away
+- Prestige no longer reloads the page
+- More code destructuring and organizing
+
+## v0.2.7
+- Fixed idle earnings
+- Destructured code a bit more
+
+## v0.2.6 - v0.2.6.2
 - Bug fixes... What, you expected more?
 
 ## v0.2.5
 - Replaced templater.js with watcher.js (both libraries from me)
-- Prestige implemented, sort of.
-- Prestige bonus and general info is more verbose.
+- Prestige implemented, sort of
+- Prestige bonus and general info is more verbose
 - Added check_version.js (so if you load a newer version, you restart instead of blowing up your pc)
 
 ## v0.2.4
